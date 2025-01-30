@@ -13,7 +13,6 @@ const {
   requestLogger,
   errorLogger,
 } = require('./middlewares/logger');
-const rateLimiter = require('./middlewares/rateLimiter');
 
 const app = express();
 
@@ -30,7 +29,6 @@ app.use(errorLogger);
 app.use(errors());
 
 app.use(errorHandler);
-
 
 app.listen(PORT, () => {
   console.log(`Listen in PORT: ${PORT}`);
