@@ -5,6 +5,9 @@ const {
 } = require('../controllers/classroom');
 
 router.get('/classrooms', getAllClassrooms);
-router.post('/classrooms', createClassRoom);
+router.post(
+  '/classrooms',
+  createClassRoom,
+);
 
 module.exports = router;

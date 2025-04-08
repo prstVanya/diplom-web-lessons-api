@@ -10,9 +10,9 @@ const {
 const auth = require('../middlewares/auth');
 
 const userRouter = require('./user');
-const subjectRouter = require('./subject');
 const classRoomRouter = require('./classroom');
-const teacherRouter = require('./teacher');
+const groupRouter = require('./group');
+const subjectRouter = require('./subject');
 const NotFoundError = require('../errors/NotFoundError');
 
 router.post('/signup', validationCreateUser, createUser);
@@ -21,9 +21,9 @@ router.post('/signin', validationLogin, login);
 router.use(auth);
 
 router.use(userRouter);
-router.use(subjectRouter);
 router.use(classRoomRouter);
-router.use(teacherRouter);
+router.use(groupRouter);
+router.use(subjectRouter);
 
 router.use(() => {
   throw new NotFoundError('Страница не найдена');

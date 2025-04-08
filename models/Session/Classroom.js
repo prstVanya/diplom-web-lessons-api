@@ -1,25 +1,15 @@
 const mongoose = require('mongoose');
 
-const Classroom = mongoose.Schema({
+const Classroom = new mongoose.Schema({
   number: {
     type: String,
     required: true,
   },
   type: {
     type: String,
-    required: true,
-  },
-  subjects: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'subject',
-      required: true,
-    }
-  ],
-  classroomId: {
-    type: Number,
+    enum: ['лекция', 'практика'],
     required: true,
   },
 });
 
-module.exports = new mongoose.model('classroom', Classroom);
+module.exports = mongoose.model('classroom', Classroom);
