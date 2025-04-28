@@ -8,3 +8,5 @@ const {
 router.get('/subject', getSubjectsByGroup);
 router.post('/subject', createSubject);
 router.delete('/subject/:id', deleteSubject);
+
+module.exports = router;

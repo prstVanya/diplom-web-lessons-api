@@ -1,11 +1,17 @@
 const Subject = require('../models/Session/Subject');
 const Group = require('../models/Session/Group');
 const NotFoundError = require('../errors/NotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
 
 module.exports.getSubjectsByGroup = async (req, res, next) => {
   try {
-    const subjects = await Subject.find({ group: req.params.groupId });
-    res.json(subjects);
+    const { groupId } = req.query;
+    if (!groupId) {
+      return res.status(400).json({ message: 'Не передан groupId' });
+    }
+
+    const subjects = await Subject.find({ group: groupId }).populate('group');
+    res.status(200).json(subjects);
   } catch (err) {
     return next(err);
   }
@@ -13,25 +19,16 @@ module.exports.getSubjectsByGroup = async (req, res, next) => {
 
 module.exports.createSubject = async (req, res, next) => {
   const { teacherName, subjectName, subjectType, groupId } = req.body;
+
   try {
     const group = await Group.findById(groupId);
     if (!group) {
-      return res.status(404).json({ message: 'Группа не найдена' });
+      throw new NotFoundError('Такой группы нет!');
     }
 
-    const groupSubjects = await Subject.find({ group: groupId });
-    if (groupSubjects.length >= 4) {
-      return res.status(400).json({ message: 'Максимум 4 предмета на группу' });
-    }
-
-    const existingSubject = await Subject.findOne({
-      teacherName,
-      subjectName,
-      subjectType
-    });
-
-    if (existingSubject) {
-      return res.status(400).json({ message: 'Такой предмет уже существует в другой группе' });
+    const existingSubjects = await Subject.find({ group: groupId });
+    if (existingSubjects.length >= 4) {
+      throw new BadRequestError('Максимум 4 предмета на группу');
     }
 
     const newSubject = new Subject({
@@ -41,16 +38,15 @@ module.exports.createSubject = async (req, res, next) => {
       group: groupId
     });
 
-    await newSubject.save();
-    res.status(201).json(newSubject);
-
+    const savedSubject = await newSubject.save();
+    res.status(201).json(savedSubject);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return next(new BadRequestError('Некоррентные данные'));
+      return next(new BadRequestError('Некорректные данные'));
     }
     return next(err);
   }
-}
+};
 
 module.exports.deleteSubject = async (req, res) => {
   try {

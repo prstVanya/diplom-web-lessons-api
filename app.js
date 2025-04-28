@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
@@ -15,6 +16,17 @@ const {
 } = require('./middlewares/logger');
 
 const app = express();
+
+const corsOption = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://localhost:5173'
+  ],
+  credentials: true,
+}
+
+app.use(cors(corsOption));
 
 app.use(express.json());
 app.use(helmet());

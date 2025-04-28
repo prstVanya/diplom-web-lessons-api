@@ -12,7 +12,11 @@ const Group = mongoose.Schema({
   groupId: {
     type: Number,
     required: true,
-  }
+  },
+  subjects: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'subject',
+  }],
 });
 
 module.exports = new mongoose.model('group', Group);
