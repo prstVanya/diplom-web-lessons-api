@@ -14,11 +14,11 @@ const Subject = mongoose.Schema({
     enum: ['лекция', 'практика'],
     required: true,
   },
-  group: {
+  group: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'group',
     required: true,
-  }
+  }]
 });
 
 module.exports = new mongoose.model('subject', Subject);
